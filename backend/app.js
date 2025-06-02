@@ -1,14 +1,31 @@
-const dotenv = require('dotenv'); // Import dotenv to load environment variables
-dotenv.config(); // Load environment variables from .env file
+const dotenv = require('dotenv');
+dotenv.config();
 const express = require('express');
-const app = express();
 const cors = require('cors');
+const app = express();
+const connectDB = require('./db/db');
+const userRoutes = require('./routes/user.routes');
 
-app.use(cors()); // Enable CORS for all routes 
+connectDB();
+
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
+
+
+
 
 app.get('/', (req, res) => {
     res.send('Hello, World!');
-    }
-);
+});
+
+app.use('/users', userRoutes);
+
+// Error handling middleware (optional, but recommended)
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
 
 module.exports = app;
