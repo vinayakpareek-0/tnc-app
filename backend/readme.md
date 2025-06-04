@@ -1,12 +1,30 @@
-# User Registration Endpoint Documentation
+# API Documentation
 
-## POST `/users/register`
+This document describes the authentication and registration endpoints for Users and Captains.
 
-Registers a new user in the system.
+---
 
-### Request Body
+## Table of Contents
 
-Send a JSON object with the following structure:
+- [User Endpoints](#user-endpoints)
+  - [Register](#user-register)
+  - [Login](#user-login)
+  - [Profile](#user-profile)
+  - [Logout](#user-logout)
+- [Captain Endpoints](#captain-endpoints)
+  - [Register](#captain-register)
+
+---
+
+## User Endpoints
+
+### User Register
+
+**POST** `/users/register`
+
+Registers a new user.
+
+#### Request Body
 
 ```json
 {
@@ -19,74 +37,26 @@ Send a JSON object with the following structure:
 }
 ```
 
-#### Field Requirements
+#### Field Reference
 
-- `fullname.firstName` (string, required): Minimum 3 characters.
-- `fullname.lastName` (string, required): Minimum 3 characters.
-- `email` (string, required): Must be a valid email address.
-- `password` (string, required): Minimum 6 characters.
+| Field              | Type   | Required | Description          | Constraints      |
+| ------------------ | ------ | -------- | -------------------- | ---------------- |
+| fullname.firstName | string | Yes      | User's first name    | min 3 characters |
+| fullname.lastName  | string | Yes      | User's last name     | min 3 characters |
+| email              | string | Yes      | User's email address | valid email      |
+| password           | string | Yes      | User's password      | min 6 characters |
 
-### Responses
+#### Responses
 
 - **201 Created**
-
   - User registered successfully.
-  - Returns a JSON object with a message, user info, and authentication token.
-  - Example:
-    ```json
-    {
-      "message": "User registered successfully",
-      "user": {
-        "id": "665f1c2b7b8e2a0012a12345",
-        "firstname": "John",
-        "lastname": "Doe",
-        "email": "john.doe@example.com"
-      },
-      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-    }
-    ```
-
+  - Returns: `message`, `user`, `token`
 - **400 Bad Request**
-
-  - Validation failed (e.g., missing or invalid fields).
-  - Returns an array of error messages.
-  - Example:
-    ```json
-    {
-      "errors": [
-        {
-          "msg": "First name is required",
-          "param": "fullname.firstName",
-          "location": "body"
-        }
-      ]
-    }
-    ```
-
+  - Validation failed. Returns: `errors` array.
 - **500 Internal Server Error**
   - Unexpected server error.
-  - Example:
-    ```json
-    {
-      "error": "Internal Server Error"
-    }
-    ```
 
-### Example cURL Request
-
-```sh
-curl -X POST http://localhost:3000/users/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "fullname": { "firstName": "John", "lastName": "Doe" },
-    "email": "john.doe@example.com",
-    "password": "yourPassword123"
-  }'
-```
-
-### Example Response
-
-A successful response from the `/users/register` endpoint (`201 Created`) will look like:
+#### Example Success Response
 
 ```json
 {
@@ -101,7 +71,7 @@ A successful response from the `/users/register` endpoint (`201 Created`) will l
 }
 ```
 
-An error response (`400 Bad Request`) will look like:
+#### Example Error Response
 
 ```json
 {
@@ -115,17 +85,27 @@ An error response (`400 Bad Request`) will look like:
 }
 ```
 
+#### Example cURL
+
+```sh
+curl -X POST http://localhost:3000/users/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "fullname": { "firstName": "John", "lastName": "Doe" },
+    "email": "john.doe@example.com",
+    "password": "yourPassword123"
+  }'
+```
+
 ---
 
-# User Login Endpoint Documentation
+### User Login
 
-## POST `/users/login`
+**POST** `/users/login`
 
 Authenticates a user and returns a token.
 
-### Request Body
-
-Send a JSON object with the following structure:
+#### Request Body
 
 ```json
 {
@@ -134,81 +114,25 @@ Send a JSON object with the following structure:
 }
 ```
 
-#### Field Requirements
+#### Field Reference
 
-- `email` (string, required): Must be a valid email address.
-- `password` (string, required): Minimum 6 characters.
+| Field    | Type   | Required | Description     | Constraints      |
+| -------- | ------ | -------- | --------------- | ---------------- |
+| email    | string | Yes      | User's email    | valid email      |
+| password | string | Yes      | User's password | min 6 characters |
 
-### Responses
+#### Responses
 
 - **200 OK**
-
-  - Login successful.
-  - Returns a JSON object with a message, user info, and authentication token.
-  - Example:
-    ```json
-    {
-      "message": "Login successful",
-      "user": {
-        "id": "665f1c2b7b8e2a0012a12345",
-        "firstname": "John",
-        "lastname": "Doe",
-        "email": "john.doe@example.com"
-      },
-      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-    }
-    ```
-
+  - Login successful. Returns: `message`, `user`, `token`
 - **400 Bad Request**
-
-  - Validation failed (e.g., missing or invalid fields).
-  - Returns an array of error messages.
-  - Example:
-    ```json
-    {
-      "errors": [
-        {
-          "msg": "Invalid email format",
-          "param": "email",
-          "location": "body"
-        }
-      ]
-    }
-    ```
-
+  - Validation failed. Returns: `errors` array.
 - **401 Unauthorized**
-
   - Invalid email or password.
-  - Example:
-    ```json
-    {
-      "message": "Invalid email or password"
-    }
-    ```
-
 - **500 Internal Server Error**
   - Unexpected server error.
-  - Example:
-    ```json
-    {
-      "error": "Internal Server Error"
-    }
-    ```
 
-### Example cURL Request
-
-```sh
-curl -X POST http://localhost:3000/users/login \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "john.doe@example.com",
-    "password": "yourPassword123"
-  }'
-```
-
-### Example Response
-
-A successful response from the `/users/login` endpoint (`200 OK`) will look like:
+#### Example Success Response
 
 ```json
 {
@@ -223,7 +147,7 @@ A successful response from the `/users/login` endpoint (`200 OK`) will look like
 }
 ```
 
-An error response (`401 Unauthorized`) will look like:
+#### Example Error Response
 
 ```json
 {
@@ -231,65 +155,39 @@ An error response (`401 Unauthorized`) will look like:
 }
 ```
 
----
-
-# User Profile Endpoint Documentation
-
-## GET `/users/profile`
-
-Retrieves the authenticated user's profile information.
-
-### Authentication
-
-Requires a valid JWT token in the `Authorization` header as `Bearer <token>` or in the `token` cookie.
-
-### Responses
-
-- **200 OK**
-
-  - Returns the user's profile information.
-  - Example:
-    ```json
-    {
-      "message": "User profile retrieved successfully",
-      "user": {
-        "id": "665f1c2b7b8e2a0012a12345",
-        "firstname": "John",
-        "lastname": "Doe",
-        "email": "john.doe@example.com"
-      }
-    }
-    ```
-
-- **401 Unauthorized**
-
-  - Missing or invalid authentication token.
-  - Example:
-    ```json
-    {
-      "message": "Authentication required"
-    }
-    ```
-
-- **500 Internal Server Error**
-  - Unexpected server error.
-  - Example:
-    ```json
-    {
-      "error": "Internal Server Error"
-    }
-    ```
-
-### Example cURL Request
+#### Example cURL
 
 ```sh
-curl -X GET http://localhost:3000/users/profile \
-  -H "Authorization: Bearer <your_token_here>"
+curl -X POST http://localhost:3000/users/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "john.doe@example.com",
+    "password": "yourPassword123"
+  }'
 ```
 
-### Example Response
+---
 
-A successful response from the `/users/profile` endpoint (`200 OK`) will look like:
+### User Profile
+
+**GET** `/users/profile`
+
+Retrieves the authenticated user's profile.
+
+#### Authentication
+
+- Requires JWT token in `Authorization: Bearer <token>` header or `token` cookie.
+
+#### Responses
+
+- **200 OK**
+  - Returns: `message`, `user`
+- **401 Unauthorized**
+  - Missing or invalid authentication token.
+- **500 Internal Server Error**
+  - Unexpected server error.
+
+#### Example Success Response
 
 ```json
 {
@@ -303,7 +201,7 @@ A successful response from the `/users/profile` endpoint (`200 OK`) will look li
 }
 ```
 
-An error response (`401 Unauthorized`) will look like:
+#### Example Error Response
 
 ```json
 {
@@ -311,59 +209,35 @@ An error response (`401 Unauthorized`) will look like:
 }
 ```
 
----
-
-# User Logout Endpoint Documentation
-
-## GET `/users/logout`
-
-Logs out the authenticated user by invalidating their token.
-
-### Authentication
-
-Requires a valid JWT token in the `Authorization` header as `Bearer <token>` or in the `token` cookie.
-
-### Responses
-
-- **200 OK**
-
-  - Logout successful.
-  - Example:
-    ```json
-    {
-      "message": "Logout successful"
-    }
-    ```
-
-- **401 Unauthorized**
-
-  - Missing or invalid authentication token.
-  - Example:
-    ```json
-    {
-      "message": "Authentication required"
-    }
-    ```
-
-- **500 Internal Server Error**
-  - Unexpected server error.
-  - Example:
-    ```json
-    {
-      "error": "Internal Server Error"
-    }
-    ```
-
-### Example cURL Request
+#### Example cURL
 
 ```sh
-curl -X GET http://localhost:3000/users/logout \
+curl -X GET http://localhost:3000/users/profile \
   -H "Authorization: Bearer <your_token_here>"
 ```
 
-### Example Response
+---
 
-A successful response from the `/users/logout` endpoint (`200 OK`) will look like:
+### User Logout
+
+**GET** `/users/logout`
+
+Logs out the authenticated user.
+
+#### Authentication
+
+- Requires JWT token in `Authorization: Bearer <token>` header or `token` cookie.
+
+#### Responses
+
+- **200 OK**
+  - Returns: `message`
+- **401 Unauthorized**
+  - Missing or invalid authentication token.
+- **500 Internal Server Error**
+  - Unexpected server error.
+
+#### Example Success Response
 
 ```json
 {
@@ -371,10 +245,138 @@ A successful response from the `/users/logout` endpoint (`200 OK`) will look lik
 }
 ```
 
-An error response (`401 Unauthorized`) will look like:
+#### Example Error Response
 
 ```json
 {
   "message": "Authentication required"
 }
+```
+
+#### Example cURL
+
+```sh
+curl -X GET http://localhost:3000/users/logout \
+  -H "Authorization: Bearer <your_token_here>"
+```
+
+---
+
+## Captain Endpoints
+
+### Captain Register
+
+**POST** `/captains/register`
+
+Registers a new captain.
+
+#### Request Body
+
+```json
+{
+  "fullname": {
+    "firstName": "Alex",
+    "lastName": "Rider"
+  },
+  "email": "alex@gmail.com",
+  "password": "Pass123",
+  "vehicle": {
+    "color": "Blue",
+    "plate": "ABC1234",
+    "capacity": 4,
+    "vehicleType": "car"
+  },
+  "location": {
+    "lat": 12.9716,
+    "lng": 77.5946
+  }
+}
+```
+
+#### Field Reference
+
+| Field               | Type   | Required | Description                | Constraints        |
+| ------------------- | ------ | -------- | -------------------------- | ------------------ |
+| fullname.firstName  | string | Yes      | Captain's first name       | min 3 characters   |
+| fullname.lastName   | string | Yes      | Captain's last name        | min 3 characters   |
+| email               | string | Yes      | Captain's email            | valid email        |
+| password            | string | Yes      | Captain's password         | min 6 characters   |
+| vehicle.color       | string | Yes      | Vehicle color              | min 3 characters   |
+| vehicle.plate       | string | Yes      | Vehicle plate number       | min 3 characters   |
+| vehicle.capacity    | number | Yes      | Vehicle passenger capacity | min 1              |
+| vehicle.vehicleType | string | Yes      | Type of vehicle            | car, bike, or auto |
+| location.lat        | number | Yes      | Latitude                   |                    |
+| location.lng        | number | Yes      | Longitude                  |                    |
+
+#### Responses
+
+- **201 Created**
+  - Captain registered successfully.
+  - Returns: `message`, `captain`, `token`
+- **400 Bad Request**
+  - Validation failed. Returns: `errors` array.
+- **500 Internal Server Error**
+  - Unexpected server error.
+
+#### Example Success Response
+
+```json
+{
+  "message": "Captain registered successfully",
+  "captain": {
+    "id": "665f1c2b7b8e2a0012a12345",
+    "fullname": {
+      "firstName": "Alex",
+      "lastName": "Rider"
+    },
+    "email": "alex@gmail.com",
+    "vehicle": {
+      "color": "Blue",
+      "plate": "ABC1234",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "location": {
+      "lat": 12.9716,
+      "lng": 77.5946
+    }
+  },
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+#### Example Error Response
+
+```json
+{
+  "errors": [
+    {
+      "msg": "First name is required",
+      "param": "fullname.firstName",
+      "location": "body"
+    }
+  ]
+}
+```
+
+#### Example cURL
+
+```sh
+curl -X POST http://localhost:3000/captains/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "fullname": { "firstName": "Alex", "lastName": "Rider" },
+    "email": "alex@gmail.com",
+    "password": "Pass123",
+    "vehicle": {
+      "color": "Blue",
+      "plate": "ABC1234",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "location": {
+      "lat": 12.9716,
+      "lng": 77.5946
+    }
+  }'
 ```

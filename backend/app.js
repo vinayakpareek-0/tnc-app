@@ -7,6 +7,8 @@ const cookieParser = require('cookie-parser');
 
 const connectDB = require('./db/db');
 const userRoutes = require('./routes/user.routes');
+const captainRoutes = require('./routes/captain.routes');
+
 
 connectDB();
 app.use(cors({
@@ -26,6 +28,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/users', userRoutes);
+app.use('/captain', captainRoutes);
 
 // Error handling middleware (optional, but recommended)
 app.use((err, req, res, next) => {
