@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/users', userRoutes);
-app.use('/captain', captainRoutes);
+app.use('/captains', captainRoutes);
 
 // Error handling middleware (optional, but recommended)
 app.use((err, req, res, next) => {
