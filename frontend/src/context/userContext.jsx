@@ -1,9 +1,8 @@
-import React from "react";
-import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import React, { useState } from "react";
+
 export const UserDataContext = React.createContext();
 
-const userContext = ({ children }) => {
+const UserContext = ({ children }) => {
   const [userData, setUserData] = useState({
     email: "",
     fullname: {
@@ -11,13 +10,12 @@ const userContext = ({ children }) => {
       lastName: "",
     },
   });
+
   return (
-    <div>
-      <UserDataContext.Provider value={userData}>
-        {children}
-      </UserDataContext.Provider>
-    </div>
+    <UserDataContext.Provider value={{ userData, setUserData }}>
+      {children}
+    </UserDataContext.Provider>
   );
 };
 
-export default userContext;
+export default UserContext;
