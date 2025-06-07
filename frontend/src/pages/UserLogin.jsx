@@ -1,18 +1,36 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { UserDataContext } from "../context/userContext";
+import { useNavigate } from "react-router-dom";
 
 const UserLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [userData, setUserData] = useState({});
 
-  const submitHandler = (e) => {
+  const { userData, setUserData } = useContext(UserDataContext);
+  const navigate = useNavigate();
+  const submitHandler = async (e) => {
     e.preventDefault();
-    const newUserData = {
+    const UserData = {
       email: email,
       password: password,
     };
-    setUserData(newUserData);
+    const response = await axios.post(
+      `${import.meta.env.VITE_BASED_URL}/users/login`,
+      UserData
+    );
+    if (response.status === 200) {
+      const data = response.data;
+      setUserData(data.user);
+      localStorage.setItem("token", data.token);
+      navigate("/home");
+    } else {
+      // Handle error (show message, etc.)
+      console.error("Login failed:", response.data);
+    }
+    // Clear the form fields after successful login
+
     setEmail("");
     setPassword("");
   };
@@ -80,7 +98,12 @@ const UserLogin = () => {
         </div>
         <div className="flex flex-col items-center   mt-6 space-y-2">
           <p className="text-sm text-gray-500 text-center">
-            © 2023 Uber. All rights reserved
+            © 2023
+            <a href="/" className=" hover:text-green-700">
+              {" "}
+              Uber
+            </a>
+            . All rights reserved
           </p>
         </div>
       </div>

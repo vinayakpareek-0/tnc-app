@@ -1,19 +1,45 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import { CaptainDataContext } from "../context/captainContext.jsx";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const CaptainLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [CaptainData, setCaptainData] = useState({});
+  const { captain, setCaptain } = React.useContext(CaptainDataContext);
+  const navigate = useNavigate();
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
-    const newData = {
+    const CaptainData = {
       email: email,
       password: password,
     };
-    setCaptainData(newData);
-    console.log("Captain Data:", newData); // This will log the correct data
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASED_URL}/captains/login`,
+        CaptainData
+      );
+
+      if (response.status === 200) {
+        setCaptain(response.data);
+        localStorage.setItem("token", response.data.token);
+        navigate("/captain-home");
+      } else {
+        console.log("Login failed:", response.data.message);
+      }
+    } catch (error) {
+      // Show a user-friendly error message
+      alert(
+        error?.response?.data?.message || "Login failed. Please try again."
+      );
+      console.error(
+        "Login failed:",
+        error?.response?.data?.message || error.message
+      );
+    }
+
     setEmail("");
     setPassword("");
   };
@@ -83,7 +109,12 @@ const CaptainLogin = () => {
         </div>
         <div className="flex flex-col items-center   mt-6 space-y-2">
           <p className="text-sm text-gray-500 text-center">
-            © 2023 Uber. All rights reserved
+            © 2023
+            <a href="/" className=" hover:text-green-700">
+              {" "}
+              Uber
+            </a>
+            . All rights reserved
           </p>
         </div>
       </div>

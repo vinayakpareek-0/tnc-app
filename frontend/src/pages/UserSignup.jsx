@@ -1,29 +1,45 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import React, { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { UserDataContext } from "../context/userContext";
 
 const UserSignup = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [userData, setUserData] = useState({});
+  // const [userData, setUserData] = useState({});
 
-  const submitHandler = (e) => {
+  const navigate = useNavigate();
+
+  const { userData, setUserData } = useContext(UserDataContext);
+
+  const submitHandler = async (e) => {
     e.preventDefault();
-    const newData = {
-      fullname: {
-        firstName: firstName,
-        lastName: lastName,
-      },
-      email: email,
-      password: password,
+    const newUser = {
+      fullname: { firstName, lastName },
+      email,
+      password,
     };
-    setUserData(newData);
-    setFirstName("");
-    setLastName("");
-    setEmail("");
-    setPassword("");
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASED_URL}/users/register`,
+        newUser
+      );
+      if (response.status === 201) {
+        const data = response.data;
+        setUserData(data.user);
+        localStorage.setItem("token", data.token);
+        navigate("/home");
+      }
+      setFirstName("");
+      setLastName("");
+      setEmail("");
+      setPassword("");
+    } catch (error) {
+      // Handle error (show message, etc.)
+      console.error("Signup failed:", error);
+    }
   };
 
   return (
@@ -88,7 +104,7 @@ const UserSignup = () => {
             type="submit"
             className="bg-[#f4c165] text-white px-4 py-2 mt-4 font-semibold text-lg rounded  transition-colors"
           >
-            Signup
+            Create Account
           </button>
           <Link
             to="/login"
@@ -112,7 +128,12 @@ const UserSignup = () => {
           .
         </p>
         <p className="text-xs text-gray-500 text-center">
-          © 2023 Uber. All rights reserved
+          © 2023
+          <a href="/" className=" hover:text-green-700">
+            {" "}
+            Uber
+          </a>
+          . All rights reserved
         </p>
       </div>
     </div>

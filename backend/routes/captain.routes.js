@@ -13,8 +13,8 @@ router.post("/register",[
     body("vehicle.plate").isLength({ min: 3 }).withMessage("Vehicle plate is required"),
     body("vehicle.capacity").isNumeric().withMessage("Vehicle capacity must be a number"),
     body("vehicle.vehicleType").isIn(['car', 'bike', 'auto']).withMessage("Invalid vehicle type"),
-    body("location.lat").isNumeric().withMessage("Latitude must be a number"),
-    body("location.lng").isNumeric().withMessage("Longitude must be a number")
+    // body("location.lat").isNumeric().withMessage("Latitude must be a number"),
+    // body("location.lng").isNumeric().withMessage("Longitude must be a number")
 ], captainController.registerCaptain
 )
 
