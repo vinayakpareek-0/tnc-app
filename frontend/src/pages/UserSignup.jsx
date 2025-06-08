@@ -115,24 +115,25 @@ const UserSignup = () => {
         </form>
         <div className="flex flex-col bg-transparent items-center mt-4 space-y-3"></div>
       </div>
-      <div className="flex flex-col items-center mt-6 space-y-2">
+
+      <div className="flex flex-col items-center mt-4 space-y-2">
         <p className="text-xs text-gray-500 text-center">
           By signing up, you agree to our{" "}
-          <a href="/terms" className="underline hover:text-green-700">
+          <Link to="/terms" className="underline hover:text-green-700">
             Terms of Service
-          </a>{" "}
+          </Link>{" "}
           and{" "}
-          <a href="/privacy" className="underline hover:text-green-700">
+          <Link to="/privacy" className="underline hover:text-green-700">
             Privacy Policy
-          </a>
+          </Link>
           .
         </p>
         <p className="text-xs text-gray-500 text-center">
           © 2023
-          <a href="/" className=" hover:text-green-700">
+          <Link to="/" className="hover:text-green-700">
             {" "}
             Uber
-          </a>
+          </Link>
           . All rights reserved
         </p>
       </div>

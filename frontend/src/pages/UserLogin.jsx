@@ -97,12 +97,12 @@ const UserLogin = () => {
           </Link>
         </div>
         <div className="flex flex-col items-center   mt-6 space-y-2">
-          <p className="text-sm text-gray-500 text-center">
+          <p className="text-xs text-gray-500 text-center">
             © 2023
-            <a href="/" className=" hover:text-green-700">
+            <Link to="/" className="hover:text-green-700">
               {" "}
               Uber
-            </a>
+            </Link>
             . All rights reserved
           </p>
         </div>

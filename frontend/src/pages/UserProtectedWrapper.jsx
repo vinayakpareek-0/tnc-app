@@ -6,7 +6,7 @@ import axios from "axios";
 const UserProtectedWrapper = ({ children }) => {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
-  const { user, setUser } = React.useContext(UserDataContext);
+  const { userData, setUserData } = React.useContext(UserDataContext); // <-- FIXED
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ const UserProtectedWrapper = ({ children }) => {
       })
       .then((response) => {
         if (response.status === 200) {
-          setUser(response.data);
+          setUserData(response.data); // <-- FIXED
           setIsLoading(false);
         } else {
           console.log("Failed to fetch user profile:", response.data.message);
@@ -35,7 +35,7 @@ const UserProtectedWrapper = ({ children }) => {
         localStorage.removeItem("token"); // Clear token on error
         navigate("/login");
       });
-  }, [token, navigate, setUser]);
+  }, [token, navigate, setUserData]); // <-- FIXED
 
   if (!token) return null; // Don't render children if not authenticated
 
