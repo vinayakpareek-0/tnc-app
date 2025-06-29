@@ -17,7 +17,7 @@ const Starting = () => {
             Get Started with <span className="text-black">Uber</span>
           </h2>
           <Link
-            to="/login"
+            to="/home"
             className="flex justify-center items-center w-full bg-black px-6 text-xl text-white py-3 mt-3 mb-2 rounded-lg font-semibold shadow hover:scale-105 hover:bg-gray-900 transition-all"
           >
             Continue
