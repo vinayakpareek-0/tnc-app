@@ -23,6 +23,3 @@ A full-stack web application inspired by Uber, enabling users to book rides and 
 4. Run the backend and frontend servers.
 5. Open the app in your browser.
 
-## License
-
-This project is licensed under the MIT License.
